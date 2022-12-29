@@ -1,33 +1,70 @@
-import { Router } from 'express'
+import { Router } from "express";
+import { body } from "express-validator";
+import { handleInputErrors } from "./module/middleware";
+import {
+  getProducts,
+  getProductById,
+  addProduct,
+  updateProduct,
+  deleteProduct,
+} from "./handlers/products";
 
-const router = Router()
+const router = Router();
 
 //Products
 router
- .get('/product', async (req, res) => {
-   const { secret } = req
-    res.json({ message: secret })
- })
- .get('/product/:id', async (req, res) => {})
- .put('/product/:id', async (req, res) => {})
- .delete('/product/:id', async (req, res) => {})
- .post('/product', async (req, res) => {})
+  .get("/product", getProducts)
+  .get("/product/:id", getProductById)
+  .put(
+    "/product/:id",
+    body("name").isString(),
+    handleInputErrors,
+    updateProduct
+  )
+  .delete("/product/:id", deleteProduct)
+  .post("/product", body("name").isString(), handleInputErrors, addProduct);
 
- //Updates
+//Updates
 router
-.get('/update', async (req, res) => {})
-.get('/update/:id', async (req, res) => {})
-.put('/update/:id', async (req, res) => {})
-.delete('/update/:id', async (req, res) => {})
-.post('/update', async (req, res) => {})
+  .get("/update", async (req, res) => {})
+  .get("/update/:id", async (req, res) => {})
+  .put(
+    "/update/:id",
+    body("title").optional(),
+    body("body").optional(),
+    body("status").isIn(["IN_PROGRESS", "SHIPPED", "CANCELLED"]),
+    body("version").optional(),
+    handleInputErrors,
+    async (req, res) => {}
+  )
+  .delete("/update/:id", async (req, res) => {})
+  .post(
+    "/update",
+    body("title").exists().isString(),
+    body("body").exists().isString(),
+    handleInputErrors,
+    async (req, res) => {}
+  );
 
 //UpdatePoints
 router
- .get('/udpatepoint', async (req, res) => {})
- .get('/udpatepoint/:id', async (req, res) => {})
- .put('/udpatepoint/:id', async (req, res) => {})
- .delete('/udpatepoint/:id', async (req, res) => {})
- .post('/udpatepoint', async (req, res) => {})
+  .get("/udpatepoint", async (req, res) => {})
+  .get("/udpatepoint/:id", async (req, res) => {})
+  .put(
+    "/udpatepoint/:id",
+    body("name").optional().isString(),
+    body("description").optional().isString(),
+    handleInputErrors,
+    async (req, res) => {}
+  )
+  .delete("/udpatepoint/:id", async (req, res) => {})
+  .post(
+    "/udpatepoint",
+    body("name").isString(),
+    body("description").isString(),
+    body("updateId").exists().isString(),
+    handleInputErrors,
+    async (req, res) => {}
+  );
 
-
-export default router
+export default router;
