@@ -5,7 +5,7 @@ interface ValidationMap {
 }
 
 class Validation {
-  validationMap: ValidationMap;
+  private validationMap: ValidationMap;
   constructor() {
     this.validationMap = {
       user: {

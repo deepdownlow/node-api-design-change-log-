@@ -1,13 +1,12 @@
-import { Request, Response, Next } from "express";
+import { Request, Response, NextFunction, ErrorRequestHandler } from "express";
 import prisma from "../module/db";
 import { createToken, hashPassword, comparePassword } from "../module/auth";
 import { DUPLICATE } from "../config/constants";
 
-
 export const createNewUser = async (
   req: Request,
   res: Response,
-  next: Next
+  next: NextFunction
 ) => {
   try {
     const {
@@ -30,8 +29,14 @@ export const createNewUser = async (
   }
 };
 
-export const signin = async (req: Request, res: Response, next: Next) => {
-  const { username, password } = req;
+export const signin = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const {
+    body: { username, password },
+  } = req;
   try {
     const user = await prisma.user.findUnique({
       where: { id: username },
@@ -50,8 +55,6 @@ export const signin = async (req: Request, res: Response, next: Next) => {
     const token = createToken(user);
     res.json({ token });
   } catch (e) {
-    e.status = 500;
-    e.message = "something went wrong";
     next(e);
   }
 };
