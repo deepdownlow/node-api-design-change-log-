@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { body } from "express-validator";
-import { handleInputErrors } from "./module/middleware";
+import { errorHandler, handleInputErrors } from "./module/middleware";
 import {
   getProducts,
   getProductById,
@@ -39,7 +39,7 @@ router
     "/update/:id",
     body("title").optional(),
     body("body").optional(),
-    body("status").isIn(["IN_PROGRESS", "SHIPPED", "CANCELLED"]),
+    body("status").isIn(["IN_PROGRESS", "SHIPPED", "CANCELLED"]).optional(),
     body("version").optional(),
     handleInputErrors,
     update
@@ -74,5 +74,7 @@ router
     handleInputErrors,
     async (req, res) => {}
   );
+
+router.use(errorHandler)
 
 export default router;

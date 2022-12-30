@@ -1,13 +1,14 @@
 import { Request, Response, Next } from 'express'
 import jwt from 'jsonwebtoken'
 import bcrypt from 'bcrypt'
+import config from '../config'
 
 const NOT_AUTHORIZED = 'Not authorized'
 
 export const createToken = ({ id, username }: { id: string, username: string }) => {
     const token = jwt.sign(
         { id, username},
-        process.env.JWT_SECRET
+        config.secret
     )
     return token
 }
@@ -15,23 +16,25 @@ export const createToken = ({ id, username }: { id: string, username: string }) 
 export const protect = (req: Request, res: Response, next: Next) => {
     const {
         headers: {
-            authorization: brearer
+            authorization: token
         }
     } = req
 
-    if(!brearer) {
+    if(!token) {
         res.status(401).send(NOT_AUTHORIZED)
         return 
     }
 
-    const [, token] = brearer.split(" ")
-    if (!token) {
-        res.status(401).send(NOT_AUTHORIZED)
-        return 
-    }
+    // const [, token] = brearer.split("")
+    // console.log('brearer', {token, brearer})
+    // if (!token) {
+    //     res.status(401).send(NOT_AUTHORIZED)
+    //     return 
+    // }
 
     try {
-        const payload = jwt.verify(token)
+        console.log('i am here', config.secret)
+        const payload = jwt.verify(token, config.secret)
         req.user = payload
         next()
     } catch(err) {
@@ -44,4 +47,4 @@ export const protect = (req: Request, res: Response, next: Next) => {
 
 export const comparePassword = (pass: string, hash: string) => bcrypt.compare(pass, hash)
 
-export const hashPassword = (pass: string) => bcrypt.hash(pass, 10)
+export const hashPassword = (pass: string) => bcrypt.hash(pass, 5)

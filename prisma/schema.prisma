@@ -25,7 +25,6 @@ model Product {
   belongsToId String
   belongsTo User @relation(fields: [belongsToId], references: [id])
   updates Update[]
-  @@index([id, belongsToId])
   @@unique([id, belongsToId])
 }
 

@@ -1,11 +1,12 @@
-import express from 'express'
+import express, { Request, Response, Next } from 'express'
 import router from './router'
 import morgan from 'morgan'
 import cors from 'cors'
 import { protect } from './module/auth'
 import { createNewUser, signin } from './handlers/user'
+import { errorHandler } from './module/middleware'
 
-const customMiddleWare = (message) => (req, res, next) => {
+const customMiddleWare = (message) => (req: Request, res: Response, next: Next) => {
     console.log(`hello from ${message}`)
     next()
 }
@@ -16,17 +17,13 @@ app.use(morgan('dev'))
 app.use(cors())
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
-
-app.use(async (req, _, next) => {
-    console.log('checking for secret')
-    req.secret = 'here is the secret'
-    next()
-})
 app.use(customMiddleWare('our team'))
 
 
 app.use('/api', protect, router)
 app.use('/user', createNewUser)
 app.use('/signin', signin)
+
+app.use(errorHandler)
 
 export default app
