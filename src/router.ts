@@ -8,6 +8,10 @@ import {
   updateProduct,
   deleteProduct,
 } from "./handlers/products";
+import {
+  getUpdates,
+  getUpdateById
+} from './handlers/update'
 
 const router = Router();
 
@@ -26,8 +30,8 @@ router
 
 //Updates
 router
-  .get("/update", async (req, res) => {})
-  .get("/update/:id", async (req, res) => {})
+  .get("/update", getUpdates)
+  .get("/update/:id", getUpdateById)
   .put(
     "/update/:id",
     body("title").optional(),

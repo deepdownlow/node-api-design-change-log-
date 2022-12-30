@@ -16,6 +16,7 @@ model User {
   password String
   createdAt DateTime @default(now())
   products Product[]
+  updates Update[]
 }
 
 model Product {
@@ -47,6 +48,9 @@ model Update {
 
   productId String
   product Product @relation(fields: [productId], references: [id])
+
+  belongsToId String
+  belongsTo User @relation(fields: [belongsToId], references: [id])
 
   updatePoints UpdatePoint[]
 }
