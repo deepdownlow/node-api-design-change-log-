@@ -3,6 +3,7 @@ import prisma from "../module/db";
 import { createToken, hashPassword, comparePassword } from "../module/auth";
 import { DUPLICATE } from "../config/constants";
 
+
 export const createNewUser = async (
   req: Request,
   res: Response,

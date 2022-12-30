@@ -15,6 +15,7 @@ import {
   update,
   deleteUpdate,
 } from "./handlers/update";
+import validator from "./lib/validation";
 
 const router = Router();
 
@@ -24,12 +25,17 @@ router
   .get("/product/:id", getProductById)
   .put(
     "/product/:id",
-    body("name").isString(),
+    validator.validate("product", "post"),
     handleInputErrors,
     updateProduct
   )
   .delete("/product/:id", deleteProduct)
-  .post("/product", body("name").isString(), handleInputErrors, addProduct);
+  .post(
+    "/product",
+    validator.validate("product", "post"),
+    handleInputErrors,
+    addProduct
+  );
 
 //Updates
 router
@@ -37,19 +43,14 @@ router
   .get("/update/:id", getUpdateById)
   .put(
     "/update/:id",
-    body("title").optional(),
-    body("body").optional(),
-    body("status").isIn(["IN_PROGRESS", "SHIPPED", "CANCELLED"]).optional(),
-    body("version").optional(),
+    validator.validate("update", "put"),
     handleInputErrors,
     update
   )
   .delete("/update/:id", deleteUpdate)
   .post(
     "/update",
-    body("title").exists().isString(),
-    body("body").exists().isString(),
-    body("productId").exists().isString(),
+    validator.validate("update", "post"),
     handleInputErrors,
     createUpdate
   );
@@ -75,6 +76,6 @@ router
     async (req, res) => {}
   );
 
-router.use(errorHandler)
+router.use(errorHandler);
 
 export default router;
