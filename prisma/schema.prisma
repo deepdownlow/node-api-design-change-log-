@@ -53,6 +53,7 @@ model Update {
   belongsTo User @relation(fields: [belongsToId], references: [id])
 
   updatePoints UpdatePoint[]
+  @@unique([id, belongsToId])
 }
 
 model UpdatePoint {

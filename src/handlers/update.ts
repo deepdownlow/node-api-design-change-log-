@@ -35,39 +35,46 @@ export const getUpdateById = async (req: Request, res: Response) => {
   });
 };
 
-export const addUpdate = async (req: Request, res: Response) => {
+export const createUpdate = async (req: Request, res: Response) => {
   const {
-    body: { title, body, version },
     user: { id: belongsToId },
+    body: { productId }
   } = req;
 
-  const product = await prisma.product.create({
-    data: {
-      name,
-      belongsToId,
+  const product = await prisma.product.findUnique({
+    where: {
+      id_belongsToId: {
+        id: productId,
+        belongsToId
+      }
     },
   });
+  if(!product) {
+    res.status(404).json({ message: 'no product found' })
+    return 
+  }
 
-  res.status(200).json({ data: product });
+  const update = await prisma.update.create({
+    data: req.body
+  })
+
+  res.status(200).json({ data: update });
 };
 
 export const update = async (req: Request, res: Response) => {
   const {
     user: { id: belongsToId },
-    params: { id },
-    body: { name },
+    params: { id }
   } = req;
 
-  const updated = await prisma.product.update({
+  const updated = await prisma.update.update({
     where: {
       id_belongsToId: {
         id,
         belongsToId,
       },
     },
-    data: {
-      name,
-    },
+    data: req.body
   });
 
   res.status(200).json({ data: { updated } });
@@ -79,7 +86,7 @@ export const deleteUpdate = async (req: Request, res: Response) => {
     params: { id },
   } = req;
 
-  const deleted = await prisma.product.delete({
+  const deleted = await prisma.update.delete({
     where: {
       id_belongsToId: {
         id,

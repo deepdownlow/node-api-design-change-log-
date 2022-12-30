@@ -10,8 +10,11 @@ import {
 } from "./handlers/products";
 import {
   getUpdates,
-  getUpdateById
-} from './handlers/update'
+  getUpdateById,
+  createUpdate,
+  update,
+  deleteUpdate,
+} from "./handlers/update";
 
 const router = Router();
 
@@ -39,15 +42,16 @@ router
     body("status").isIn(["IN_PROGRESS", "SHIPPED", "CANCELLED"]),
     body("version").optional(),
     handleInputErrors,
-    async (req, res) => {}
+    update
   )
-  .delete("/update/:id", async (req, res) => {})
+  .delete("/update/:id", deleteUpdate)
   .post(
     "/update",
     body("title").exists().isString(),
     body("body").exists().isString(),
+    body("productId").exists().isString(),
     handleInputErrors,
-    async (req, res) => {}
+    createUpdate
   );
 
 //UpdatePoints
