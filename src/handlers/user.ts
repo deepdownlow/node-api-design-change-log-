@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction, ErrorRequestHandler } from "express";
+import { Request, Response, NextFunction } from "express";
 import prisma from "../module/db";
 import { createToken, hashPassword, comparePassword } from "../module/auth";
 import { DUPLICATE } from "../config/constants";

@@ -1,4 +1,4 @@
-import express, { Request, Response, Next } from "express";
+import express, { Request, Response, NextFunction } from "express";
 import router from "./router";
 import morgan from "morgan";
 import cors from "cors";
@@ -8,7 +8,7 @@ import { errorHandler, handleInputErrors } from "./module/middleware";
 import validator from './lib/validation'
 
 const customMiddleWare =
-  (message) => (req: Request, res: Response, next: Next) => {
+  (message: string) => (req: Request, res: Response, next: NextFunction) => {
     console.log(`hello from ${message}`);
     next();
   };
@@ -20,7 +20,6 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(customMiddleWare("our team"));
-
 app.use("/api", protect, router);
 app.use(
   "/user",

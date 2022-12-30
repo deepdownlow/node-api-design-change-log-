@@ -1,7 +1,7 @@
 import { body } from "express-validator";
 
 interface ValidationMap {
-  [key: string]: { [key: string]: Function[] };
+  [key: string]: { [key: string]: any };
 }
 
 class Validation {

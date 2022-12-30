@@ -1,8 +1,9 @@
-import { Request, Response, Next } from "express";
+import { Response, NextFunction } from "express";
+import { RequestWithPayload } from '../types'
 import prisma from "../module/db";
 import { INVALID_INPUT_LENGTH } from '../config/constants'
 
-export const getProducts = async (req: Request, res: Response, next: Next) => {
+export const getProducts = async (req: RequestWithPayload, res: Response, next: NextFunction) => {
   const {
     user: { id },
   } = req;
@@ -23,7 +24,7 @@ export const getProducts = async (req: Request, res: Response, next: Next) => {
   }
 };
 
-export const getProductById = async (req: Request, res: Response, next: Next) => {
+export const getProductById = async (req: RequestWithPayload, res: Response, next: NextFunction) => {
   const {
     params: { id },
     user: { id: userId },
@@ -51,7 +52,7 @@ export const getProductById = async (req: Request, res: Response, next: Next) =>
   }
 };
 
-export const addProduct = async (req: Request, res: Response, next: Next) => {
+export const addProduct = async (req: RequestWithPayload, res: Response, next: NextFunction) => {
   const {
     body: { name },
     user: { id: belongsToId },
@@ -76,7 +77,7 @@ export const addProduct = async (req: Request, res: Response, next: Next) => {
   }
 };
 
-export const updateProduct = async (req: Request, res: Response, next: Next) => {
+export const updateProduct = async (req: RequestWithPayload, res: Response, next: NextFunction) => {
   const {
     user: { id: belongsToId },
     params: { id },
@@ -102,7 +103,7 @@ export const updateProduct = async (req: Request, res: Response, next: Next) => 
   }
 };
 
-export const deleteProduct = async (req: Request, res: Response, next: Next) => {
+export const deleteProduct = async (req: RequestWithPayload, res: Response, next: NextFunction) => {
   const {
     user: { id: belongsToId },
     params: { id },

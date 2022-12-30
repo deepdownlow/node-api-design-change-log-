@@ -1,50 +1,62 @@
-import { Request, Response, Next } from 'express'
-import jwt from 'jsonwebtoken'
-import bcrypt from 'bcrypt'
-import config from '../config'
+import { Request, Response, NextFunction } from "express";
+import jwt from "jsonwebtoken";
+import bcrypt from "bcrypt";
+import config from "../config";
 
-const NOT_AUTHORIZED = 'Not authorized'
+const NOT_AUTHORIZED = "Not authorized";
 
-export const createToken = ({ id, username }: { id: string, username: string }) => {
-    const token = jwt.sign(
-        { id, username},
-        config.secret
-    )
-    return token
+interface RequestWithPayload extends Request {
+  user: {
+    payload: {
+      [k: string]: string;
+    };
+  };
 }
 
-export const protect = (req: Request, res: Response, next: Next) => {
-    const {
-        headers: {
-            authorization: token
-        }
-    } = req
+export const createToken = ({
+  id,
+  username,
+}: {
+  id: string;
+  username: string;
+}) => {
+  const token = jwt.sign({ id, username }, config.secret);
+  return token;
+};
 
-    if(!token) {
-        res.status(401).send(NOT_AUTHORIZED)
-        return 
-    }
+export const protect = (
+  req: RequestWithPayload,
+  res: Response,
+  next: NextFunction
+) => {
+  const {
+    headers: { authorization: bearer },
+  } = req;
 
-    // const [, token] = brearer.split("")
-    // console.log('brearer', {token, brearer})
-    // if (!token) {
-    //     res.status(401).send(NOT_AUTHORIZED)
-    //     return 
-    // }
+  if (!bearer) {
+    res.status(401).send(NOT_AUTHORIZED);
+    return;
+  }
 
-    try {
-        console.log('i am here', config.secret)
-        const payload = jwt.verify(token, config.secret)
-        req.user = payload
-        next()
-    } catch(err) {
-        console.error(err)
-        res.status(401).send(NOT_AUTHORIZED)
-        return
-    }
+  const [, token] = bearer.split("");
 
-}
+  if (!token) {
+    res.status(401).send(NOT_AUTHORIZED);
+    return;
+  }
 
-export const comparePassword = (pass: string, hash: string) => bcrypt.compare(pass, hash)
+  try {
+    const payload = jwt.verify(token, config.secret);
+    req.user = payload;
+    next();
+  } catch (err) {
+    console.error(err);
+    res.status(401).send(NOT_AUTHORIZED);
+    return;
+  }
+};
 
-export const hashPassword = (pass: string) => bcrypt.hash(pass, 5)
+export const comparePassword = (pass: string, hash: string) =>
+  bcrypt.compare(pass, hash);
+
+export const hashPassword = (pass: string) => bcrypt.hash(pass, 5);

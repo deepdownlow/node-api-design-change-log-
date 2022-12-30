@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction, ErrorRequestHandler } from "express";
+import { Request, Response, NextFunction } from "express";
 import { validationResult } from "express-validator";
 
 export const handleInputErrors = (
@@ -11,11 +11,12 @@ export const handleInputErrors = (
     res.status(400).json({ message: errors.array() });
     return;
   }
+
   next();
 };
 
 export const errorHandler = (
-  err: ErrorRequestHandler,
+  err: any,
   req: Request,
   res: Response,
   next: NextFunction

@@ -1,7 +1,10 @@
-import { Request, Response } from "express";
+import { Response } from "express";
+import { RequestWithPayload } from '../types'
 import prisma from "../module/db";
 
-export const getUpdates = async (req: Request, res: Response) => {
+
+
+export const getUpdates = async (req: RequestWithPayload, res: Response) => {
   const {
     user: { id },
   } = req;
@@ -16,7 +19,7 @@ export const getUpdates = async (req: Request, res: Response) => {
   });
 };
 
-export const getUpdateById = async (req: Request, res: Response) => {
+export const getUpdateById = async (req: RequestWithPayload, res: Response) => {
   const {
     params: { id },
   } = req;
@@ -35,7 +38,7 @@ export const getUpdateById = async (req: Request, res: Response) => {
   });
 };
 
-export const createUpdate = async (req: Request, res: Response) => {
+export const createUpdate = async (req: RequestWithPayload, res: Response) => {
   const {
     user: { id: belongsToId },
     body: { productId }
@@ -61,7 +64,7 @@ export const createUpdate = async (req: Request, res: Response) => {
   res.status(200).json({ data: update });
 };
 
-export const update = async (req: Request, res: Response) => {
+export const update = async (req: RequestWithPayload, res: Response) => {
   const {
     user: { id: belongsToId },
     params: { id }
@@ -80,17 +83,17 @@ export const update = async (req: Request, res: Response) => {
   res.status(200).json({ data: { updated } });
 };
 
-export const deleteUpdate = async (req: Request, res: Response) => {
+export const deleteUpdate = async (req: RequestWithPayload, res: Response) => {
   const {
-    user: { id: belongsToId },
-    params: { id },
+    user: { id },
+    params: { id: updateId },
   } = req;
 
   const deleted = await prisma.update.delete({
     where: {
       id_belongsToId: {
-        id,
-        belongsToId,
+        id: updateId,
+        belongsToId: id,
       },
     },
   });
