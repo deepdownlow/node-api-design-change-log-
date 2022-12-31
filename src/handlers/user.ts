@@ -23,8 +23,9 @@ export const createNewUser = async (
 
     const token = createToken(user);
     res.json({ token });
-  } catch (e) {
-    // e.input = DUPLICATE;
+  } catch (e: any) {
+    console.log('e', e)
+    e.input = DUPLICATE;
     next(e);
   }
 };

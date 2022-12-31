@@ -5,14 +5,6 @@ import config from "../config";
 
 const NOT_AUTHORIZED = "Not authorized";
 
-interface RequestWithPayload extends Request {
-  user: {
-    payload: {
-      [k: string]: string;
-    };
-  };
-}
-
 export const createToken = ({
   id,
   username,
@@ -20,6 +12,7 @@ export const createToken = ({
   id: string;
   username: string;
 }) => {
+  console.log('config.secret', config)
   const token = jwt.sign({ id, username }, config.secret);
   return token;
 };

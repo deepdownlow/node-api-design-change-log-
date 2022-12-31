@@ -1,8 +1,6 @@
 import app from './server'
-import * as dotenv from "dotenv";
 import config from './config';
 
-dotenv.config()
 declare global {
   namespace Express {
     interface Request {
