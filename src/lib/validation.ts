@@ -1,7 +1,7 @@
-import { body } from "express-validator";
+import ExpressValidator, { body } from "express-validator";
 
 interface ValidationMap {
-  [key: string]: { [key: string]: any };
+  [key: string]: { [key: string]: ExpressValidator.ValidationChain[] };
 }
 
 class Validation {

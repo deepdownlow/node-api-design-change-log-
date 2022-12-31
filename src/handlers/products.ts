@@ -1,9 +1,8 @@
-import { Response, NextFunction } from "express";
-import { RequestWithPayload } from '../types'
+import { Response, NextFunction, Request } from "express";
 import prisma from "../module/db";
 import { INVALID_INPUT_LENGTH } from '../config/constants'
 
-export const getProducts = async (req: RequestWithPayload, res: Response, next: NextFunction) => {
+export const getProducts = async (req: Request, res: Response, next: NextFunction) => {
   const {
     user: { id },
   } = req;
@@ -17,14 +16,14 @@ export const getProducts = async (req: RequestWithPayload, res: Response, next: 
     });
 
     res.status(200).json({
-      data: user.products,
+      data: user?.products,
     });
   } catch (e) {
     next(e);
   }
 };
 
-export const getProductById = async (req: RequestWithPayload, res: Response, next: NextFunction) => {
+export const getProductById = async (req: Request, res: Response, next: NextFunction) => {
   const {
     params: { id },
     user: { id: userId },
@@ -52,7 +51,7 @@ export const getProductById = async (req: RequestWithPayload, res: Response, nex
   }
 };
 
-export const addProduct = async (req: RequestWithPayload, res: Response, next: NextFunction) => {
+export const addProduct = async (req: Request, res: Response, next: NextFunction) => {
   const {
     body: { name },
     user: { id: belongsToId },
@@ -72,12 +71,12 @@ export const addProduct = async (req: RequestWithPayload, res: Response, next: N
   
     res.status(200).json({ data: product });
   } catch(e) {
-    e.input =  e.code === 'P2000' && INVALID_INPUT_LENGTH
+    // e.input =  e.code === 'P2000' && INVALID_INPUT_LENGTH
     next(e)
   }
 };
 
-export const updateProduct = async (req: RequestWithPayload, res: Response, next: NextFunction) => {
+export const updateProduct = async (req: Request, res: Response, next: NextFunction) => {
   const {
     user: { id: belongsToId },
     params: { id },
@@ -103,7 +102,7 @@ export const updateProduct = async (req: RequestWithPayload, res: Response, next
   }
 };
 
-export const deleteProduct = async (req: RequestWithPayload, res: Response, next: NextFunction) => {
+export const deleteProduct = async (req: Request, res: Response, next: NextFunction) => {
   const {
     user: { id: belongsToId },
     params: { id },
