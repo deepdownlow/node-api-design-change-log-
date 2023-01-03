@@ -17,7 +17,7 @@ export const handleInputErrors = (
 
 export const errorHandler = (
   err: ErrorRequestHandler & { input?: string },
-  req: Request,
+  _req: Request,
   res: Response,
   next: NextFunction
 ) => {

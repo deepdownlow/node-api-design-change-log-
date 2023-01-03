@@ -18,7 +18,7 @@ export const createToken = ({
 };
 
 export const protect = (
-  req: any,
+  req: Request,
   res: Response,
   next: NextFunction
 ) => {
